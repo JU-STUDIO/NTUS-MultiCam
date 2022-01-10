@@ -2,6 +2,7 @@ from lib.__init__ import cv2
 from lib.multithreading import VideoWriterWidget
 
 import tkinter as tk
+import time
 
 class  ControlPanel:
 
@@ -14,8 +15,10 @@ class  ControlPanel:
         self.start_save_btn = tk.Button(self.parent, text='開始儲存', width=20, command=self.start_save).place(x=10, y=10)
         self.end_save_btn = tk.Button(self.parent, text='結束儲存', width=20, command=self.end_save).place(x=240, y=10)
 
-        self.prev_frame_btn = tk.Button(self.parent, text='<F', width=20, command=self.prev_frame).place(x=10, y=50)
-        self.next_frame_btn = tk.Button(self.parent, text='F>', width=20, command=self.next_frame).place(x=240, y=50)
+        self.replay_frame_btn = tk.Button(self.parent, text='R', width=7, height=4, command=self.replay_frame).place(x=170, y=10)
+
+        self.prev_frame_btn = tk.Button(self.parent, text='<F', width=20, command=self.prev_frame).place(x=10, y=55)
+        self.next_frame_btn = tk.Button(self.parent, text='F>', width=20, command=self.next_frame).place(x=240, y=55)
 
     def start_save(self):
         VideoWriterWidget.saveFrameflag = True
@@ -28,6 +31,13 @@ class  ControlPanel:
             framePath = f'video\\Camera - {camNum}\\{frame_num}.png'
             image = cv2.imread(framePath)
             cv2.imshow(f'Cam{camNum}', image)
+
+    def show_all_cam_frame(self,frame_num):
+        for camNum in range(1,3):
+            framePath = f'video\\Camera - {camNum}\\{frame_num}.png'
+            image = cv2.imread(framePath)
+            cv2.imshow('Replay', image)
+            time.sleep(1)
     
     def next_frame(self):
         self.frameNum += 1
@@ -36,6 +46,9 @@ class  ControlPanel:
     def prev_frame(self):
         self.frameNum -= 1
         self.show_frame(self.frameNum)
+
+    def replay_frame(self):
+        self.show_all_cam_frame(self.frameNum)
 
 def main():
     root = tk.Tk()
